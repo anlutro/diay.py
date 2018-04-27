@@ -11,6 +11,8 @@ setup(
 	version='0.1',
 	license='MIT',
 	description='diay - a dependency injection library',
+	long_description=open('README.md').read(),
+	long_description_content_type='text/markdown',
 	author='Andreas Lutro',
 	author_email='anlutro@gmail.com',
 	url='https://github.com/anlutro/diay.py',
