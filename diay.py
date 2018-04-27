@@ -25,8 +25,8 @@ def provider(func=None, *, singleton=False, injector=None):
         singleton (bool): The returned value should be a singleton or shared
             instance. If False (the default) the provider function will be
             invoked again for every time it's needed for injection.
-        injector (Injector): If provided, the function is immediately registered
-            as a provider with the injector instance.
+        injector (Injector): If provided, the function is immediately
+            registered as a provider with the injector instance.
 
     Example:
         @diay.provider(singleton=True)
@@ -97,7 +97,8 @@ class Injector:
             plugin = self.get(plugin)
 
         if not isinstance(plugin, Plugin):
-            raise DiayException("Don't know how to register plugin: %r" % plugin)
+            msg = 'plugin %r must be an object of type Plugin' % plugin
+            raise DiayException(msg)
 
         methods = inspect.getmembers(plugin, predicate=inspect.ismethod)
         for _, method in methods:

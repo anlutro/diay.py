@@ -2,5 +2,3 @@ strictness: veryhigh
 test-warnings: false
 doc-warnings: false
 member-warnings: true
-
-max-line-length: 100
