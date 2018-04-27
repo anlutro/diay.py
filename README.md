@@ -4,7 +4,7 @@
 [![Latest version on PyPI](https://img.shields.io/pypi/v/diay.svg?maxAge=2592000)](https://pypi.org/project/diay)
 [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Diay is a [dependency injection]()/[inversion of control]() library for Python 3.5 and higher. It leverages the type hints introduced in 3.5 to allow you to easily call functions or construct classes that require specific types of objects to function.
+Diay is a [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection)/[inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) library for Python 3.5 and higher. It leverages the type hints introduced in 3.5 to allow you to easily call functions or construct classes that require specific types of objects to function.
 
 As an extremely basic and somewhat contrived example - the value of the library doesn't really come into play until you have fairly deeply nested dependencies - let's say you want to render a jinja2 template using some data from an API.
 
