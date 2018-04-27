@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 # allow setup.py to be ran from anywhere
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 setup(
 	name='diay',
-	version='0.1.1',
+	version='0.1.2',
 	license='MIT',
 	description='diay - a dependency injection library',
 	long_description=open('README.md').read(),
@@ -16,7 +16,8 @@ setup(
 	author='Andreas Lutro',
 	author_email='anlutro@gmail.com',
 	url='https://github.com/anlutro/diay.py',
-	packages=find_packages(include=('diay', 'diay.*')),
+	# packages does not work for single file modules
+	py_modules=['diay'],
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
