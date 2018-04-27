@@ -1,0 +1,4 @@
+pytest
+pytest-cov
+pytest-pythonpath
+prospector[with_pyroma]
