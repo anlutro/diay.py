@@ -150,14 +150,14 @@ class Injector:
 
         raise DiayException('cannot resolve: %r' % thing)
 
-    def call(self, func, **kwargs):
+    def call(self, func, *args, **kwargs):
         """
         Call a function, resolving any type-hinted arguments.
         """
         guessed_kwargs = self._guess_kwargs(func)
         for key, val in guessed_kwargs.items():
             kwargs.setdefault(key, val)
-        return func(**kwargs)
+        return func(*args, **kwargs)
 
     def _call_class_init(self, cls):
         # if this statement is true, the class or its parent class(es) does not
