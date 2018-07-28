@@ -9,6 +9,7 @@ install:
 
 script:
   - pytest
-  - prospector
+  - pylint -E diay
+  - pycodestyle
 
 sudo: false

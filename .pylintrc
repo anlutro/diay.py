@@ -1,0 +1,6 @@
+[MASTER]
+load-plugins = diay.pylint_plugin
+
+[REPORTS]
+reports = no
+output-format = colorized
