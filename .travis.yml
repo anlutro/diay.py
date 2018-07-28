@@ -3,7 +3,6 @@ language: python
 python:
   - '3.5'
   - '3.6'
-  - '3.7'
 
 install:
   - pip install -e . -r dev-requirements.txt
@@ -11,6 +10,6 @@ install:
 script:
   - pytest
   - pylint -E diay
-  - pycodestyle
+  - pycodestyle diay
 
 sudo: false
