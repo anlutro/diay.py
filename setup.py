@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # allow setup.py to be ran from anywhere
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -16,8 +16,7 @@ setup(
     author='Andreas Lutro',
     author_email='anlutro@gmail.com',
     url='https://github.com/anlutro/diay.py',
-    # packages does not work for single file modules
-    py_modules=['diay'],
+    packages=find_packages(include=('diay', 'diay.*')),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
