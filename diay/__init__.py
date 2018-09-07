@@ -1,3 +1,4 @@
+import functools
 import inspect
 import typing
 
@@ -93,25 +94,44 @@ class Injector:
         """
         Register a plugin.
         """
-        if inspect.isclass(plugin):
-            plugin = self.get(plugin)
-
-        if not isinstance(plugin, Plugin):
-            msg = 'plugin %r must be an object of type Plugin' % plugin
+        if isinstance(plugin, Plugin):
+            lazy = False
+        elif issubclass(plugin, Plugin):
+            lazy = True
+        else:
+            msg = 'plugin %r must be an object/class of type Plugin' % plugin
             raise DiayException(msg)
 
-        methods = inspect.getmembers(plugin, predicate=inspect.ismethod)
+        predicate = inspect.isfunction if lazy else inspect.ismethod
+        methods = inspect.getmembers(plugin, predicate=predicate)
         for _, method in methods:
             if getattr(method, '__di__', {}).get('provides'):
-                self.register_provider(method)
+                if lazy:
+                    self.register_lazy_provider_method(plugin, method)
+                else:
+                    self.register_provider(method)
 
     def register_provider(self, func):
         """
         Register a provider function.
         """
         if 'provides' not in getattr(func, '__di__', {}):
-            raise DiayException('Function %r is not a provider' % func)
+            raise DiayException('function %r is not a provider' % func)
+
         self.factories[func.__di__['provides']] = func
+
+    def register_lazy_provider_method(self, cls, method):
+        """
+        Register a class method lazily as a provider.
+        """
+        if 'provides' not in getattr(method, '__di__', {}):
+            raise DiayException('method %r is not a provider' % method)
+
+        @functools.wraps(method)
+        def wrapper(*args, **kwargs):
+            return getattr(self.get(cls), method.__name__)(*args, **kwargs)
+
+        self.factories[method.__di__['provides']] = wrapper
 
     def set_factory(self, thing: type, value, overwrite=False):
         """
