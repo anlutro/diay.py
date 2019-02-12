@@ -1,13 +1,6 @@
 import diay
 
 
-def test_inject_into_function():
-    class A: pass
-    def f(a: A): return a
-    a = diay.Injector().get(f)
-    assert isinstance(a, A)
-
-
 def test_inject_into_constructor():
     class A: pass
     class B:

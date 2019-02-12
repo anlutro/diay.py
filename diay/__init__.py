@@ -177,7 +177,14 @@ class Injector:
         guessed_kwargs = self._guess_kwargs(func)
         for key, val in guessed_kwargs.items():
             kwargs.setdefault(key, val)
-        return func(*args, **kwargs)
+        try:
+            return func(*args, **kwargs)
+        except TypeError as exc:
+            msg = (
+                "tried calling function %r but failed, probably "
+                "because it takes arguments that cannot be resolved"
+            ) % func
+            raise DiayException(msg) from exc
 
     def _call_class_init(self, cls):
         # if this statement is true, the class or its parent class(es) does not
@@ -186,7 +193,14 @@ class Injector:
         if cls.__init__ is object.__init__:
             obj = cls()
         else:
-            obj = cls(**self._guess_kwargs(cls.__init__))
+            try:
+                obj = cls(**self._guess_kwargs(cls.__init__))
+            except TypeError as exc:
+                msg = (
+                    "tried instantiating class %r but failed, probably "
+                    "because __init__ takes arguments that cannot be resolved"
+                ) % cls
+                raise DiayException(msg) from exc
 
         # extra properties defined with @diay.inject
         if 'inject' in getattr(obj, '__di__', {}):
