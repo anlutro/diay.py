@@ -20,7 +20,7 @@ def transform(cls):
         else:
             func = node
 
-        if not func.as_string() == 'diay.inject':
+        if not func.as_string() == "diay.inject":
             continue
 
         cls.instance_attrs[node.args[0].value] = [

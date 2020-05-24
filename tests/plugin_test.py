@@ -5,11 +5,11 @@ def test_plugin():
     class TestPlugin(diay.Plugin):
         @diay.provider
         def f(self) -> str:
-            return 'foo'
+            return "foo"
 
     i = diay.Injector()
     i.register_plugin(TestPlugin())
-    assert 'foo' == i.get(str)
+    assert "foo" == i.get(str)
 
 
 def test_plugin_lazy():
@@ -18,6 +18,7 @@ def test_plugin_lazy():
     register the plugin or provider first should not matter. The plugin should
     be lazily instantiated.
     """
+
     class Dep:
         def __init__(self, v):
             self.v = v
@@ -35,7 +36,9 @@ def test_plugin_lazy():
 
     i = diay.Injector()
     i.register_plugin(TestPlugin)
+
     @i.provider
     def provide_dep() -> Dep:
-        return Dep('foo')
-    assert 'foo' == i.get(str)
+        return Dep("foo")
+
+    assert "foo" == i.get(str)

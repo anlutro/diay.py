@@ -9,9 +9,9 @@ class DiayException(Exception):
 
 def _wrap_provider_func(func, di_props):
     hints = typing.get_type_hints(func)
-    di_props['provides'] = hints['return']
+    di_props["provides"] = hints["return"]
 
-    if not hasattr(func, '__di__'):
+    if not hasattr(func, "__di__"):
         func.__di__ = {}
     func.__di__.update(di_props)
 
@@ -34,8 +34,9 @@ def provider(func=None, *, singleton=False, injector=None):
         def myfunc() -> MyClass:
             return MyClass(args)
     """
+
     def decorator(func):
-        wrapped = _wrap_provider_func(func, {'singleton': singleton})
+        wrapped = _wrap_provider_func(func, {"singleton": singleton})
         if injector:
             injector.register_provider(wrapped)
         return wrapped
@@ -46,9 +47,9 @@ def provider(func=None, *, singleton=False, injector=None):
 
 
 def _inject_object(obj, var_name, var_type):
-    if not hasattr(obj, '__di__'):
+    if not hasattr(obj, "__di__"):
         obj.__di__ = {}
-    obj.__di__.setdefault('inject', {})[var_name] = var_type
+    obj.__di__.setdefault("inject", {})[var_name] = var_type
     return obj
 
 
@@ -67,11 +68,13 @@ def inject(*args, **kwargs):
         class MyOtherClass: pass
         assert isinstance(injector.get(MyOtherClass).foo, MyClass)
     """
+
     def wrapper(obj):
         if inspect.isclass(obj) or callable(obj):
             _inject_object(obj, *args, **kwargs)
             return obj
         raise DiayException("Don't know how to inject into %r" % obj)
+
     return wrapper
 
 
@@ -79,6 +82,7 @@ class Plugin:  # pylint: disable=too-few-public-methods
     """
     A plugin is a collection of providers.
     """
+
     pass
 
 
@@ -86,6 +90,7 @@ class Injector:
     """
     Class that knows how to do dependency injection.
     """
+
     def __init__(self):
         self.instances = {}
         self.factories = {}
@@ -99,13 +104,13 @@ class Injector:
         elif issubclass(plugin, Plugin):
             lazy = True
         else:
-            msg = 'plugin %r must be an object/class of type Plugin' % plugin
+            msg = "plugin %r must be an object/class of type Plugin" % plugin
             raise DiayException(msg)
 
         predicate = inspect.isfunction if lazy else inspect.ismethod
         methods = inspect.getmembers(plugin, predicate=predicate)
         for _, method in methods:
-            if getattr(method, '__di__', {}).get('provides'):
+            if getattr(method, "__di__", {}).get("provides"):
                 if lazy:
                     self.register_lazy_provider_method(plugin, method)
                 else:
@@ -115,30 +120,30 @@ class Injector:
         """
         Register a provider function.
         """
-        if 'provides' not in getattr(func, '__di__', {}):
-            raise DiayException('function %r is not a provider' % func)
+        if "provides" not in getattr(func, "__di__", {}):
+            raise DiayException("function %r is not a provider" % func)
 
-        self.factories[func.__di__['provides']] = func
+        self.factories[func.__di__["provides"]] = func
 
     def register_lazy_provider_method(self, cls, method):
         """
         Register a class method lazily as a provider.
         """
-        if 'provides' not in getattr(method, '__di__', {}):
-            raise DiayException('method %r is not a provider' % method)
+        if "provides" not in getattr(method, "__di__", {}):
+            raise DiayException("method %r is not a provider" % method)
 
         @functools.wraps(method)
         def wrapper(*args, **kwargs):
             return getattr(self.get(cls), method.__name__)(*args, **kwargs)
 
-        self.factories[method.__di__['provides']] = wrapper
+        self.factories[method.__di__["provides"]] = wrapper
 
     def set_factory(self, thing: type, value, overwrite=False):
         """
         Set the factory for something.
         """
         if thing in self.factories and not overwrite:
-            raise DiayException('factory for %r already exists' % thing)
+            raise DiayException("factory for %r already exists" % thing)
         self.factories[thing] = value
 
     def set_instance(self, thing: type, value, overwrite=False):
@@ -146,7 +151,7 @@ class Injector:
         Set an instance of a thing.
         """
         if thing in self.instances and not overwrite:
-            raise DiayException('instance for %r already exists' % thing)
+            raise DiayException("instance for %r already exists" % thing)
         self.instances[thing] = value
 
     def get(self, thing: type):
@@ -159,7 +164,7 @@ class Injector:
         if thing in self.factories:
             fact = self.factories[thing]
             ret = self.get(fact)
-            if hasattr(fact, '__di__') and fact.__di__['singleton']:
+            if hasattr(fact, "__di__") and fact.__di__["singleton"]:
                 self.instances[thing] = ret
             return ret
 
@@ -168,7 +173,7 @@ class Injector:
         elif callable(thing):
             return self.call(thing)
 
-        raise DiayException('cannot resolve: %r' % thing)
+        raise DiayException("cannot resolve: %r" % thing)
 
     def call(self, func, *args, **kwargs):
         """
@@ -203,8 +208,8 @@ class Injector:
                 raise DiayException(msg) from exc
 
         # extra properties defined with @diay.inject
-        if 'inject' in getattr(obj, '__di__', {}):
-            for prop_name, prop_type in obj.__di__['inject'].items():
+        if "inject" in getattr(obj, "__di__", {}):
+            for prop_name, prop_type in obj.__di__["inject"].items():
                 setattr(obj, prop_name, self.get(prop_type))
 
         return obj
@@ -213,7 +218,7 @@ class Injector:
         kwargs = {}
         hints = typing.get_type_hints(func)
         for arg in hints:
-            if arg == 'return':
+            if arg == "return":
                 continue
             kwargs[arg] = self.get(hints[arg])
         return kwargs
@@ -222,5 +227,5 @@ class Injector:
         """
         Convenience decorator, shortcut for @diay.provider(injector=self)
         """
-        kwargs['injector'] = self
+        kwargs["injector"] = self
         return provider(*args, **kwargs)

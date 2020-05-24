@@ -1,17 +1,25 @@
-language: python
+branches:
+  - master
+
 dist: xenial
+sudo: false
+language: python
+cache:
+  pip: true
 
 python:
-  - '3.5'
-  - '3.6'
+  - '3.8'
   - '3.7'
+  - '3.6'
+install: pip install -e . --upgrade pytest
+script: pytest
 
-install:
-  - pip install --upgrade -e . -r dev-requirements.txt
+jobs:
+  include:
+    - name: black
+      install: pip install --upgrade black
+      script: black --check .
 
-script:
-  - pytest
-  - pylint -E diay
-  - pycodestyle diay
-
-sudo: false
+    - name: pylint
+      install: pip install -e . --upgrade pylint
+      script: pylint -E diay
