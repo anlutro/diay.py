@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/anlutro/diay.py.svg?branch=master)](https://travis-ci.org/anlutro/diay.py)
 [![Latest version on PyPI](https://img.shields.io/pypi/v/diay.svg?maxAge=2592000)](https://pypi.org/project/diay)
-[![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![Licence](https://img.shields.io/github/license/anlutro/diay.py.svg)
 
 Diay is a [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection)/[inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) library for Python 3.5 and higher. It leverages the type hints introduced in 3.5 to allow you to easily call functions or construct classes that require specific types of objects to function.
 
@@ -27,3 +27,7 @@ def render(j2env: jinja2.Environment, apiclient: some.APIclient):
 
 html = injector.call(render)
 ```
+
+## License
+
+The contents of this repository is released under the [MIT license](http://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file included for more information.
