@@ -179,7 +179,7 @@ class Injector:
         """
         Call a function, resolving any type-hinted arguments.
         """
-        guessed_kwargs = self._guess_kwargs(func)
+        guessed_kwargs = self._guess_kwargs(func, exclude=kwargs.keys())
         for key, val in guessed_kwargs.items():
             kwargs.setdefault(key, val)
         try:
@@ -214,9 +214,12 @@ class Injector:
 
         return obj
 
-    def _guess_kwargs(self, func):
+    def _guess_kwargs(self, func, exclude=None):
         kwargs = {}
         hints = typing.get_type_hints(func)
+        if exclude:
+            for key in exclude:
+                del hints[key]
         for arg in hints:
             if arg == "return":
                 continue
